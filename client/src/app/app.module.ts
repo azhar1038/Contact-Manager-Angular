@@ -10,6 +10,7 @@ import { MenuComponent } from './menu/menu.component';
 import { ContactComponent } from './contact/contact.component';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import { ApiService } from './services/api.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ApiService } from './services/api.service';
   ],
   providers: [
     ApiService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })
