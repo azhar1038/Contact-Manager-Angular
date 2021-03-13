@@ -1,5 +1,5 @@
 const express = require("express");
-const badyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const path = require("path");
 
 const apiRouter = require("./api-router");

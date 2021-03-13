@@ -1,7 +1,20 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const checkJwt = require("express-jwt");
 
 function apiRouter(database){
     const router = express.Router();
+
+    router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] })
+        .unless({ path: '/api/authenticate' })
+    );
+
+    router.use((err, req, res, next)=>{
+        if(err.name === 'UnauthorizedError'){
+            res.status(401).json({ error: err.message });
+        }
+    });
 
     router.get('/contacts', (req, res)=>{
         const contactsCollection = database.collection('contacts');
@@ -20,6 +33,35 @@ function apiRouter(database){
     
             const newContact = result.ops[0];
             return res.status(201).json(newContact);
+        });
+    });
+
+    router.post('/authenticate', (req, res)=>{
+        const user = req.body;
+        const usersCollection = database.collection('users');
+
+        usersCollection.findOne({username: user.username}, (err, result)=>{
+            if(!result){
+                return res.status(404).json({ error: "User not found" });
+            }
+
+            if(!bcrypt.compareSync(user.password, result.password)){
+                return res.status(401).json({ error: "Incorrect credentials" });
+            }
+
+            const payload = {
+                username: result.username,
+                admin: result.admin
+            };
+
+            const token = jwt.sign(payload, process.env.JWT_SECRET, {
+                expiresIn: '4h'
+            });
+
+            return res.json({
+                message: "Successfully authenticated",
+                token,
+            });
         });
     });
 
