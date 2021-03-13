@@ -9,6 +9,7 @@ import { ContactListComponent } from './contact-list/contact-list.component';
 import { MenuComponent } from './menu/menu.component';
 import { ContactComponent } from './contact/contact.component';
 import { AddContactComponent } from './add-contact/add-contact.component';
+import { ApiService } from './services/api.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,9 @@ import { AddContactComponent } from './add-contact/add-contact.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    ApiService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
 import { Contact } from '../models/contact';
 import { NgForm } from '@angular/forms';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-add-contact',
@@ -12,7 +12,7 @@ export class AddContactComponent implements OnInit {
   loading: boolean = false;
   newContact: Contact|null = null;
 
-  constructor(public http: HttpClient) { }
+  constructor(public api: ApiService) { }
 
   ngOnInit(): void {
   }
@@ -27,10 +27,7 @@ export class AddContactComponent implements OnInit {
       photoUrl: formValues.photo,
     };
 
-    const header = new HttpHeaders();
-    header.append('Content-Type', 'application/json');
-
-    this.http.post<Contact>('/api/contacts', contact, {headers: header})
+    this.api.post<Contact>('contacts', contact)
       .subscribe(data=>{
         form.reset();
         this.loading = false;

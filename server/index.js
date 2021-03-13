@@ -2,11 +2,14 @@ const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
 dotenv.config();
 
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use("/profiles", express.static(path.join(__dirname, 'profiles')));
 
 const client = new MongoClient(process.env.DB_CONN, {
     useNewUrlParser: true,
@@ -33,6 +36,10 @@ app.post('/api/contacts', (req, res)=>{
         const newContact = result.ops[0];
         return res.status(201).json(newContact);
     });
+});
+
+app.get('*', (req, res)=>{
+    return res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 client.connect().then(db=>{

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Contact } from '../models/contact';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-contact-list',
@@ -10,13 +10,13 @@ import { HttpClient } from '@angular/common/http';
 export class ContactListComponent implements OnInit {
   contacts: Contact[];
 
-  constructor(public http: HttpClient){
+  constructor(public api: ApiService){
     this.contacts = [];
   }
 
   ngOnInit(): void {
     
-    this.http.get<Contact[]>('/api/contacts')
+    this.api.get<Contact[]>('contacts')
       .subscribe(data=>{
         this.contacts = data;
       });
